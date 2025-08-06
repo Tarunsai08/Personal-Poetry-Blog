@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verse & Vision</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://css.gg/css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #f9fafb;
+            --text-light: #1f2937;
+            --bg-dark: #2d3748;
+            --text-dark: #e5e7eb;
+            --accent-light: #e5e7eb;
+            --accent-dark: #1a202c;
+            --accent-hover-light: #d1d5db;
+            --accent-hover-dark: #4b5563;
+        }
+        html.dark {
+            --bg-light: var(--bg-dark);
+            --text-light: var(--text-dark);
+            --accent-light: var(--accent-dark);
+            --accent-hover-light: var(--accent-hover-dark);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        .poem-title {
+            font-family: 'Lora', serif;
+        }
+        .poem-body {
+            font-family: 'Lora', serif;
+            white-space: pre-wrap;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 2rem;
+        }
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            #poems-nav {
+                border-bottom: 1px solid var(--accent-light);
+                padding-bottom: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        #poems-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            color: var(--text-light);
+            opacity: 0.7;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        #poems-nav a:hover {
+            background-color: var(--accent-light);
+            opacity: 1;
+        }
+        #poems-nav a.active {
+            background-color: var(--accent-light);
+            opacity: 1;
+            font-weight: 700;
+        }
+
+        #theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            color: var(--text-light);
+        }
+        .sun-and-moon {
+            width: 24px;
+            height: 24px;
+            transform-style: preserve-3d;
+            transition: transform 0.75s cubic-bezier(0.2, 1, 0.4, 1);
+        }
+        .sun, .moon {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+        }
+        .sun {
+            transform: rotateY(0deg);
+        }
+        .moon {
+            transform: rotateY(180deg);
+        }
+        .dark .sun-and-moon {
+            transform: rotateY(180deg);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="py-6 px-4 sm:px-6 lg:px-8 border-b" style="border-color: var(--accent-light);">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold tracking-tight" style="font-family: 'Lora', serif;">Verse & Vision</h1>
+            <button id="theme-toggle" aria-label="Toggle dark mode">
+                <div class="sun-and-moon">
+                    <div class="sun">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+                    </div>
+                    <div class="moon">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+                    </div>
+                </div>
+            </button>
+        </div>
+    </header>
+
+    <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 main-layout">
+        <nav id="poems-nav">
+        </nav>
+        <main id="poem-display">
+        </main>
+    </div>
+
+    <footer class="text-center py-8 text-sm opacity-60">
+        <p>&copy; <span id="year"></span> Tarun Varaha Sai</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const poems = [
+                {
+                    title: "The Unburdening",
+                    date: "August 07, 2025",
+                    content: `Feelings left shattered
+emotions untethered
+Binding them would cause inaction
+which led my life to seek a fraction
+
+let go of the things you've been
+let go of the world you've seen
+
+Each step I take, the road unknown
+A place to build, to stand alone
+The weight I carried, now released
+In letting go, I find my peace
+
+I leave behind the heart's dark door
+and seek the life I've yet to explore`
+                },
+            ];
+            const poemsNav = document.getElementById('poems-nav');
+            const poemDisplay = document.getElementById('poem-display');
+            const themeToggle = document.getElementById('theme-toggle');
+            const htmlElement = document.documentElement;
+
+            // Function to display a selected poem
+            function displayPoem(index) {
+                const poem = poems[index];
+                if (!poem) return;
+
+                poemDisplay.innerHTML = `
+                    <article class="prose-custom max-w-none">
+                        <div class="text-center mb-12">
+                            <h2 class="text-3xl md:text-4xl font-medium poem-title">${poem.title}</h2>
+                            <p class="text-sm opacity-60 mt-2">${poem.date}</p>
+                        </div>
+                        <p class="poem-body text-lg leading-loose text-center">${poem.content}</p>
+                    </article>
+                `;
+            }
+            
+            // Function to update the active link in the sidebar
+            function updateActiveLink(index) {
+                const navLinks = poemsNav.querySelectorAll('a');
+                navLinks.forEach((link, i) => {
+                    if (i === index) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            }
+
+            // Function to initialize the poem navigation
+            function initNav() {
+                poemsNav.innerHTML = ''; 
+                poems.forEach((poem, index) => {
+                    const link = document.createElement('a');
+                    link.href = `#${poem.title.toLowerCase().replace(/\s+/g, '-')}`;
+                    link.textContent = poem.title;
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        displayPoem(index);
+                        updateActiveLink(index);
+                    });
+                    poemsNav.appendChild(link);
+                });
+            }
+
+            // Function to apply the theme
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    htmlElement.classList.add('dark');
+                } else {
+                    htmlElement.classList.remove('dark');
+                }
+            };
+
+            initNav();
+            displayPoem(0);
+            updateActiveLink(0);
+
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            });
+        });
+    </script>
+
+</body>
+</html>
